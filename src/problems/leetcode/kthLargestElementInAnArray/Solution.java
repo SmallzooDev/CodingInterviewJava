@@ -23,3 +23,4 @@ public class Solution {
 }
 
 // 6,5,4,3,2,1
+// -1 이 1번째, -k가 k번째
