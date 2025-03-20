@@ -1,7 +1,5 @@
 #!/bin/bash
-
 url=$1
-
 if [ -z "$url" ]; then
     echo "사용법: ./init.sh <문제_URL>"
     exit 1
@@ -14,7 +12,7 @@ to_camel_case() {
     if [[ $input =~ ^[0-9] ]]; then
         input="p$input"
     fi
-    
+
     # 특수문자를 제거하고 카멜케이스로 변환
     echo "$input" | sed 's/[^a-zA-Z0-9-]//g' | awk -F'-' '{
         result=$1
@@ -55,32 +53,36 @@ fi
 # 디렉토리 생성
 mkdir -p "$base_dir"
 
-# Solution.java 파일 생성
-cat > "$base_dir/Solution.java" << EOF
+if [[ $site == "leetcode" ]]; then
+    cat > "$base_dir/Solution.java" << EOF
 package problems.$site.$problem_name;
 
 public class Solution {
-    
+
 }
 EOF
-
-# Main.java 파일 생성 (테스트용)
-cat > "$base_dir/Main.java" << EOF
+else
+    cat > "$base_dir/Main.java" << EOF
 package problems.$site.$problem_name;
 
+import java.io.*;
+import java.util.*;
+
 public class Main {
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        // 여기에 테스트 코드 작성
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        br.close();
     }
 }
 EOF
+fi
 
-# README.md 파일 생성
+# README.md 파일 생성 (동일하게 유지)
 cat > "$base_dir/README.md" << EOF
 # ${site} ${problem_name}
 ---
 > url : ${url}
 EOF
 
-echo "문제 생성 완료: $base_dir" 
+echo "문제 생성 완료: $base_dir"
